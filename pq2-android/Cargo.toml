@@ -1,0 +1,45 @@
+[package]
+name = "pq2-android"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Persona Q2 for Android: the game's code recompiled by 3dsrecomp and run by Zakuro"
+
+[lib]
+name = "main"
+crate-type = ["cdylib"]
+path = "src/lib.rs"
+
+[dependencies]
+zakuro = { path = "../zakuro/crates/zakuro" }
+winit = { version = "0.30", features = ["android-native-activity"] }
+
+# linked: the game's code recompiled on a PC linked into the library (the
+# developer's builds, never shared). without it the APK holds no game code: the
+# phone recompiles the player's own game the first time it starts
+[features]
+linked = []
+
+# the 3dsrecomp beside zakuro here, the one that recompiles the game on the
+# phone and that generated the linked code, so that the ABI matches
+[patch."https://github.com/fearkov/3dsrecomp"]
+recomp3ds = { path = "../3dsrecomp" }
+recomp-abi = { path = "../3dsrecomp/abi" }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 8
+panic = "unwind"
+debug = false
+strip = "debuginfo"
+
+# what weighs most in each frame, optimized even in debug builds
+[profile.dev.package.zakuro-cpu]
+opt-level = 3
+[profile.dev.package.zakuro-gpu]
+opt-level = 3
+[profile.dev.package.naga]
+opt-level = 3
+
+[workspace]

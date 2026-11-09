@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pq2port.app"
+    android:versionCode="9"
+    android:versionName="0.5.0">
+
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-feature android:name="android.hardware.vulkan.version" android:version="0x400003" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.hardware.gamepad" android:required="false" />
+
+    <!-- native libraries extracted at install: libzig.so, the C compiler the game is recompiled
+         with on the phone, has to be a file that can run -->
+    <application
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/AppTheme"
+        android:hasCode="true"
+        android:allowBackup="false"
+        android:extractNativeLibs="true"
+        android:isGame="true"
+        android:appCategory="game"
+        android:largeHeap="true"
+        android:resizeableActivity="true">
+
+        <!-- simpleperf desde adb (perfilar la CPU en el móvil); no hace la app depurable -->
+        <profileable android:shell="true" />
+
+        <!-- la pantalla de la app -->
+        <activity
+            android:name=".Launcher"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|smallestScreenSize" />
+        <!-- con el nombre de la actividad de antes, para que su acceso directo siga tras actualizar -->
+        <activity-alias
+            android:name=".LauncherActivity"
+            android:targetActivity=".Launcher"
+            android:icon="@mipmap/ic_launcher"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- el juego corre en un proceso propio, que se cierra con él -->
+        <activity
+            android:name=".GameActivity"
+            android:exported="false"
+            android:process=":game"
+            android:launchMode="singleTop"
+            android:screenOrientation="fullUser"
+            android:theme="@style/GameTheme"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|navigation|smallestScreenSize|uiMode|density">
+            <meta-data android:name="android.app.lib_name" android:value="main" />
+        </activity>
+        <provider
+            android:name=".LogProvider"
+            android:authorities="com.pq2port.app.logprovider"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+    </application>
+</manifest>

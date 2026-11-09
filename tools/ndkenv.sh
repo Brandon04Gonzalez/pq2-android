@@ -1,0 +1,13 @@
+# entorno para compilar Rust para Android con el NDK r27c
+export ANDROID_HOME="${ANDROID_HOME:-C:/Users/brand/AppData/Local/Android/Sdk}"
+export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
+NDKBIN="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/windows-x86_64/bin"
+export CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER="$NDKBIN/aarch64-linux-android26-clang.cmd"
+export CC_aarch64_linux_android="$NDKBIN/aarch64-linux-android26-clang.cmd"
+export CXX_aarch64_linux_android="$NDKBIN/aarch64-linux-android26-clang++.cmd"
+export AR_aarch64_linux_android="$NDKBIN/llvm-ar.exe"
+export CARGO_TARGET_X86_64_LINUX_ANDROID_LINKER="$NDKBIN/x86_64-linux-android26-clang.cmd"
+export CC_x86_64_linux_android="$NDKBIN/x86_64-linux-android26-clang.cmd"
+export CXX_x86_64_linux_android="$NDKBIN/x86_64-linux-android26-clang++.cmd"
+export AR_x86_64_linux_android="$NDKBIN/llvm-ar.exe"
+export PATH="$HOME/.cargo/bin:$PATH"

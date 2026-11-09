@@ -1,0 +1,6 @@
+target/
+build/
+out/
+*.apk
+*.keystore
+__pycache__/
